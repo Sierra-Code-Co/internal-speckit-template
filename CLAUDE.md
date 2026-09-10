@@ -100,6 +100,41 @@ High-level documentation for human readers lives in `docs/` and the repo `README
 - Use `/speckit-taskstoissues` to convert spec tasks into GitHub Issues.
 - Close issues via PR references (e.g., `Closes #12`) — do not close manually unless no code change is needed.
 
+## Scope lives in one file, and it is not this one
+
+**Read [`docs/requirements.md`](docs/requirements.md) before writing or extending a spec.** It is the
+requirements register: numbered IDs, a verbatim quote per requirement, a provenance reference, a
+status of Confirmed / Asked / Inferred / Open, and a named owner for every open question.
+
+Three rules, and the third is mechanical because the first two were tried as prose and failed:
+
+1. **Every functional requirement in every `specs/*/spec.md` cites a register ID.** An FR that cannot
+   cite one is a deletion candidate, not a feature.
+2. **Diff the register against the constitution's scope before writing a spec.** If they disagree
+   about whether something is in scope, stop and resolve it first. **The register wins; the
+   constitution is what gets corrected.**
+3. **`scripts/assert-requirements-traceability.sh` enforces rule 1** and runs in the pre-push gate.
+   It also repairs the `checklists/requirements.md` filename collision that `/speckit-specify`
+   recreates on every feature.
+
+Why this is stated ahead of the workflow, and why rule 3 exists. One project in this fleet reached
+five figures of source lines on `main` containing **zero lines of the requestor's first priority**.
+Its constitution's Out of Scope section named that priority as somebody else's problem for two weeks
+while the requirements record listed it as the ask, and nothing read both documents. Each spec's
+`Input:` field paraphrased whoever ran the command, so no FR traced to anyone's request, and one spec
+built an 8,000-line datastore for a consumer that did not exist yet.
+
+The fix was a traceability principle in the constitution — and **the very first spec written under
+that principle shipped two FRs citing constitution principles instead of register IDs, with the
+spec-quality checklist's traceability box ticked**. A vendor review round caught it. That is why rule
+3 is a script: a rule whose only enforcement is someone remembering to look has a known failure rate,
+and this one failed on its first use.
+
+The register is **committed to the repo that holds the code**, because requirements change the code.
+What stays in a notes workspace is what would change *who to talk to or how to pitch something*:
+meeting transcripts, stakeholder read-outs, anything candid about a named person. Reach that through
+a gitignored symlink; never copy it in.
+
 ## Spec-Driven Development Workflow
 
 This project uses [GitHub Spec Kit](https://github.com/github/spec-kit). The workflow is:
@@ -117,8 +152,10 @@ This project uses [GitHub Spec Kit](https://github.com/github/spec-kit). The wor
 
 ## Agent Behavior Guidelines
 
+- **Always read `docs/requirements.md` before starting a new feature**, and diff it against the constitution's scope. On disagreement, stop: the register wins.
 - **Always read `.specify/memory/constitution.md` before starting a new feature** to ensure compliance with project principles.
 - **Always read the relevant `specs/<feature>/` files before implementing** to understand the design decisions already made.
+- **Never name a checklist `requirements.md`.** That path is the requirements register. Spec-quality checklists are `specs/<feature>/checklists/spec-quality.md`.
 - **Do not skip the spec-kit workflow.** If asked to build something new, suggest running through specify → plan → tasks → implement.
 - **Commit after each logical unit of work**, not after every single file change.
 - **When in doubt about a design decision**, check the spec and plan first, then ask the user.
@@ -128,6 +165,7 @@ This project uses [GitHub Spec Kit](https://github.com/github/spec-kit). The wor
 
 | Document | Purpose |
 |----------|---------|
+| `docs/requirements.md` | **The requirements register — the authoritative scope.** Every spec FR cites an ID from it. |
 | `.specify/memory/constitution.md` | Project principles, testing philosophy, quality gates |
 | `.specify/memory/project-tracker.md` | Current project state, pointer to GitHub Issues |
 | `.specify/memory/lessons-learned/` | Lessons learned index and topic files |

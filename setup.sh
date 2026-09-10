@@ -149,6 +149,28 @@ rm -rf "$BACKUP_DIR"
 echo "Asserting disable-model-invocation: false on project skills..."
 "$REPO_ROOT/scripts/assert-skill-invocation.sh" "$REPO_ROOT" || exit 1
 
+# Repair the checklist filename collision that `specify init` reintroduces.
+# `/speckit-specify` is vendored, and it writes its spec-QUALITY checklist to
+# specs/*/checklists/requirements.md. With the requirements register living at
+# docs/requirements.md, grepping a repo for `requirements.md` then returns the
+# wrong file, and a coding agent reads a quality checklist as the scope of the
+# project. One repo in this fleet did exactly that.
+#
+# Non-fatal here on purpose, and the exit code is the reason. This script exits 1
+# for untraceable FRs too, which on a fresh template is the expected state — a
+# starter register with example IDs and no specs yet. Aborting setup on that would
+# make every bootstrap fail. The pre-push gate is where a non-zero must block; at
+# setup time the useful half is the rename, and the traceability report is
+# information for the operator.
+echo ""
+echo "Repairing checklist filename collisions and reporting FR traceability..."
+if [ -x "$REPO_ROOT/scripts/assert-requirements-traceability.sh" ]; then
+  "$REPO_ROOT/scripts/assert-requirements-traceability.sh" "$REPO_ROOT" || \
+    echo "Note: traceability findings above are advisory at setup time; they block at pre-push." >&2
+else
+  echo "Warning: scripts/assert-requirements-traceability.sh missing or not executable." >&2
+fi
+
 # Install Anthropic's official Office skills (docx, pptx, xlsx) for generating
 # Word / PowerPoint / Excel artifacts (status reports, decks for mgmt, etc.)
 # directly from Claude Code. The skills are non-redistributable per their LICENSE.txt,

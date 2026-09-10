@@ -56,15 +56,30 @@
 
 ## Scope
 
+<!--
+  THIS SECTION IS NOT THE AUTHORITY ON SCOPE. `docs/requirements.md` is.
+
+  Keep this section as a summary, and diff it against the register whenever
+  either changes. Where the two disagree, the REGISTER WINS and this section is
+  what gets corrected.
+
+  Why the instruction is this blunt: one project in this fleet carried the
+  requestor's first priority under Out of Scope here for two weeks while its
+  requirements record listed it as the ask. Nothing read both documents, and five
+  figures of source lines were written on the wrong side of the disagreement. A
+  scope list in two places with no reconciliation step is worse than one, because
+  each looks authoritative on its own.
+-->
+
 ### In Scope
 
-- [PRIMARY_CAPABILITY_1]
-- [PRIMARY_CAPABILITY_2]
+- [PRIMARY_CAPABILITY_1] — register [ID]
+- [PRIMARY_CAPABILITY_2] — register [ID]
 
 ### Out of Scope
 
-- [EXCLUDED_CAPABILITY_1 — and why]
-- [EXCLUDED_CAPABILITY_2 — and why]
+- [EXCLUDED_CAPABILITY_1 — and why, and the register row that says so]
+- [EXCLUDED_CAPABILITY_2 — and why, and the register row that says so]
 
 ## Testing Philosophy
 
@@ -83,9 +98,15 @@
 
 | Phase | Gate | Required |
 |-------|------|----------|
+| **Pre-Spec** | `docs/requirements.md` diffed against the Scope section above; disagreements resolved in the register's favour | Yes |
 | **Pre-Commit** | Tests pass, linter clean, no secrets in diff | Yes |
+| **Pre-Push** | `scripts/assert-requirements-traceability.sh` exits 0 — every spec FR cites a register ID | Yes |
 | **Pre-Merge** | All CI checks green, PR reviewed or self-reviewed against spec | Yes |
 | **Release** | All acceptance criteria verified, no open `bug` issues for milestone | Yes |
+
+The Pre-Push gate is a script rather than a review item on purpose. It was a
+constitution principle first, and the first spec written under that principle
+violated it while its own quality checklist recorded the box as ticked.
 
 ## Development Workflow
 
