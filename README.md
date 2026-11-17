@@ -3,6 +3,8 @@
 A reusable project template for [Claude Code](https://claude.ai/claude-code) with [GitHub Spec Kit](https://github.com/github/spec-kit) for spec-driven development and multi-model plan review.
 
 > **Docs live elsewhere.** This repo is the *bootstrap artifact* — the thing you clone to start a project. The architecture guides, spec-driven-development walkthrough, multi-model review docs, and the decision records behind all of it live in **[Sierra-Code-Co/claude-workflows](https://github.com/Sierra-Code-Co/claude-workflows)**. Start there if you want to understand the system; start here if you want a new project.
+>
+> **Personal skills live there too.** This template carries the *project* skills (the `speckit-*` chain, `/review-plan`, `/ship`, `/feature`). Skills that follow a person across every project, such as the writing check, are published from claude-workflows as a Claude Code plugin list and as Microsoft 365 Copilot upload zips: `/plugin marketplace add Sierra-Code-Co/claude-workflows`, then `/plugin install writing-check@sierra-code-co`. See its [installing-skills guide](https://github.com/Sierra-Code-Co/claude-workflows/blob/main/docs/installing-skills.md).
 
 ## What's Included
 
